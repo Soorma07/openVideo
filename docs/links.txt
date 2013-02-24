@@ -1,0 +1,21 @@
+VIM Hardcopy: http://vim.runpaint.org/basics/printing/
+C++:
+    File IO Stuff: http://www.cplusplus.com/doc/tutorial/files/
+    Some strange C++ links: http://alexvn.freeservers.com/s1/download.html
+    cerr redirect:
+        https://groups.google.com/forum/?fromgroups=#!msg/alt.sources/WnEBR7J-Ou4/oFaZThMEQrsJ
+        http://www.velocityreviews.com/forums/t287983-redirecting-cerr.html
+        http://stackoverflow.com/questions/13228817/how-to-set-stderr-for-daemon-c
+    stoi stuff:
+        http://stackoverflow.com/questions/13589947/how-to-use-c11-stdstoi-with-gcc
+        http://www.cplusplus.com/reference/string/stoi/
+    getop stuff:
+        http://stackoverflow.com/questions/9255822/optarg-set-to-null
+        http://stackoverflow.com/questions/2219562/using-getopt-to-parse-program-arguments-in-c
+cmake:
+    Add c++11 support: https://github.com/Morwenn/POLDER/blob/master/cmake/set_cxx_norm.cmake
+V4L2:
+    Stereo capture: http://lowcost-robot.org/?page_id=351
+    Possible small library: http://code.google.com/p/libv4l2cam/
+Creating Unix Libraries:
+    Duke short description: www.cs.duke.edu/~ola/courses/programming/libraries.html

@@ -32,6 +32,11 @@ if ( USE_OPEN_CV )
     set ( EXTRA_LIBS ${EXTRA_LIBS} ${OpenCV_LIBS} )
 endif ( USE_OPEN_CV )
 
+# Add gtest to the project
+add_subdirectory( /usr/src/gtest ${PROJECT_BINARY_DIR}/gtest )
+include_directories( "/usr/include/gtest" )
+set ( EXTRA_LIBS ${EXTRA_LIBS} gtest gtest_main pthread )
+
 # Set the version of the C++ standard
 # If running from the command line, run cmake twice.
 set ( CMAKE_CXX_FLAGS "-std=c++0x" )
@@ -41,3 +46,4 @@ add_executable( libV4l2Capture  openVideo.cpp )
 
 # Add the libraries to build against for the target
 target_link_libraries ( libV4l2Capture ${EXTRA_LIBS} )
+

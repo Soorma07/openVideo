@@ -22,6 +22,12 @@ configure_file (
     "${PROJECT_BINARY_DIR}/include/libConfig.h"
     )
 
+# Add the exception class to the project
+configure_file (
+    "${PROJECT_SOURCE_DIR}/include/cameraException.h"
+    "${PROJECT_BINARY_DIR}/include/cameraException.h"
+    )
+
 # Add project source directories
 add_subdirectory ( "${PROJECT_SOURCE_DIR}/src" )
 

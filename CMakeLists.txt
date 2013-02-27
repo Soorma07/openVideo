@@ -28,7 +28,7 @@ add_custom_command (
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different
 			"${PROJECT_SOURCE_DIR}/libs/*"
 				$<TARGET_FILE_DIR:libV4l2Capture> 
-		)
+	)
 		
 # Add project source directories
 add_subdirectory ( "${PROJECT_SOURCE_DIR}/src" )

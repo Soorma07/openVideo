@@ -10,7 +10,6 @@
 
 #include <stdexcept>
 #include <string>
-#include <cstring>
 #include <sstream>
 
 namespace libV4l2Capture {
@@ -52,7 +51,6 @@ namespace libV4l2Capture {
             {
             	messageBuild( );
            	};
-
 
             cameraException( const cameraException& other ) :
             	cameraNumber( other.cameraNumber ), deviceName( other.deviceName ),

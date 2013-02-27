@@ -19,37 +19,48 @@ namespace libV4l2Capture {
     {
         private:
             int cameraNumber;
-            char* deviceName;
+            std::string deviceName;
             std::stringstream helper;
 
-            inline const char* messageBuild( )
+            inline void messageBuild( )
             {
-                this->helper << "Camera error: "
-                             << "Camera number: " << this->cameraNumber
-                             << "Device name: " << this->deviceName;
-                return this->helper.str().c_str();
-            };
+                this->helper << "Camera error: " << extendedError.str()
+                             << " Camera number: " << this->cameraNumber
+                             << " Device name: " << this->deviceName;
+             };
 
         public:
-            cameraException() : cameraNumber(0), deviceName("0")
+
+            std::stringstream extendedError;
+
+            cameraException() : cameraNumber(0), deviceName( NULL ),
+            	std::runtime_error( "" )
         	{
             	messageBuild( );
-                std::runtime_error( this->helper.str() );
         	};
 
-            cameraException( char* deviceName, int cameraNumber ) :
-            	cameraNumber( cameraNumber ),deviceName( deviceName )
+            cameraException( std::string deviceName, int cameraNumber ) :
+            	cameraNumber( cameraNumber ),deviceName( deviceName ),
+            		std::runtime_error( "" )
             {
             	messageBuild( );
-            	std::runtime_error( this->helper.str() );
            	};
+
+            cameraException( char* deviceName, int cameraNumber ) :
+            	cameraNumber( cameraNumber ),deviceName( deviceName ),
+            		std::runtime_error( "" )
+            {
+            	messageBuild( );
+           	};
+
 
             cameraException( const cameraException& other ) :
             	cameraNumber( other.cameraNumber ), deviceName( other.deviceName ),
-                	std::runtime_error( other.helper.str() ){};
+                		std::runtime_error( "" ){ this->messageBuild(); };
 
             virtual ~cameraException() throw(){};
 
+            const char* what() const throw(){ return helper.str().c_str(); };
 
     }; /* cameraException */
 

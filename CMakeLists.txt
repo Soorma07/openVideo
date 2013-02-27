@@ -23,12 +23,7 @@ configure_file (
     )
     
 # Copy the header files to the binary tree
-add_custom_command ( 
-	TARGET libV4l2Capture POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy_if_different
-			"${PROJECT_SOURCE_DIR}/libs/*"
-				$<TARGET_FILE_DIR:libV4l2Capture> 
-	)
+file( COPY ${PROJECT_SOURCE_DIR}/include/ DESTINATION ${PROJECT_BINARY_DIR}/include/ )
 		
 # Add project source directories
 add_subdirectory ( "${PROJECT_SOURCE_DIR}/src" )

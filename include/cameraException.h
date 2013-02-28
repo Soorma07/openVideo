@@ -33,24 +33,15 @@ namespace libV4l2Capture {
             std::stringstream extendedError;
 
             cameraException() : cameraNumber(0), deviceName( NULL ),
-            	std::runtime_error( "" )
-        	{
-            	messageBuild( );
-        	};
+            	std::runtime_error( "" ){ messageBuild( ); };
 
             cameraException( std::string deviceName, int cameraNumber ) :
             	cameraNumber( cameraNumber ),deviceName( deviceName ),
-            		std::runtime_error( "" )
-            {
-            	messageBuild( );
-           	};
+            		std::runtime_error( "" ){ messageBuild( ); };
 
             cameraException( char* deviceName, int cameraNumber ) :
             	cameraNumber( cameraNumber ),deviceName( deviceName ),
-            		std::runtime_error( "" )
-            {
-            	messageBuild( );
-           	};
+            		std::runtime_error( "" ){ messageBuild( ); };
 
             cameraException( const cameraException& other ) :
             	cameraNumber( other.cameraNumber ), deviceName( other.deviceName ),

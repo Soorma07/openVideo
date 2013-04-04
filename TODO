@@ -1,0 +1,9 @@
+* April 3, 2013
+    * Make the constructor.
+    * Make the Destructor.
+    * Change processImage to output a standard image type.  Perhaps use Magik++.
+    * Convert error conditions to exceptions.
+    * Convert asserts to exceptions.
+    * Add gtest
+    * Make standard directory structure.
+    * Write test application.

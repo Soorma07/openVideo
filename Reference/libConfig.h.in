@@ -1,0 +1,6 @@
+// Project configurations, options, and settings
+
+#define libV4l2Capture_VERSION_MAJOR @libV4l2Capture_VERSION_MAJOR@
+#define libV4l2Capture_VERSION_MINOR @libV4l2Capture_VERSION_MINOR@
+
+#cmakedefine USE_OPEN_CV

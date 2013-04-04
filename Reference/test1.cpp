@@ -7,6 +7,11 @@
  ** see http://linuxtv.org/docs.php for more information
  **/
 
+//Trying magick++
+#include <Magick++.h>
+#include <string>
+using namespace Magick;
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -72,6 +77,15 @@ static void process_image(const void *p, int size)
     fflush(stderr);
     fprintf(stderr, ".");
     fflush(stdout);
+//Trying ImageMagick++
+    Blob imageBlob( p, size );
+    std::string imageType("UYVY");
+    //std::string imageType("YUV");
+    Geometry imageGeom( 640,480);
+    Image image;
+    image.read( imageBlob, imageGeom, 16, imageType );
+    image.write( "test.jpg" );
+
 }
 
 static int read_frame(void)
@@ -485,7 +499,7 @@ static void init_device(void)
     if (force_format) {
         fmt.fmt.pix.width       = 640;
         fmt.fmt.pix.height      = 480;
-        fmt.fmt.pix.pixelformat = V4L2_PIX_FMT_MJPEG;
+        fmt.fmt.pix.pixelformat = V4L2_PIX_FMT_YUYV;
         fmt.fmt.pix.field       = V4L2_FIELD_INTERLACED;
 
         if (-1 == xioctl(fd, VIDIOC_S_FMT, &fmt))

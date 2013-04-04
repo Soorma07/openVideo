@@ -31,7 +31,6 @@ int  capture::xioctl( int fileDescriptor, int request, void *arg )
 
 int  capture::readFrame( void )
 {
-    struct v4l2_buffer buf;
     unsigned int i;
 
     switch( io )
@@ -52,12 +51,12 @@ int  capture::readFrame( void )
             processImage( buffers[0].start, buffers[0].length);
             break;
         case IO_METHOD_MMAP:
-            CLEAR(buf);
+            CLEAR(v4lBuffer);
 
-            buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-            buf.memory = V4L2_MEMORY_MMAP;
+            v4lBuffer.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+            v4lBuffer.memory = V4L2_MEMORY_MMAP;
 
-            if( -1 == xioctl( fileDescriptor, VIDIOC_DQBUF, &buf ) )
+            if( -1 == xioctl( fileDescriptor, VIDIOC_DQBUF, &v4lBuffer ) )
             {
                 switch( errno )
                 {
@@ -69,20 +68,20 @@ int  capture::readFrame( void )
                 }
             }
 
-            assert( buf.index < numBuffers );
+            assert( v4lBuffer.index < numBuffers );
 
-            processImage( buffers[buf.index].start, buf.bytesused );
+            processImage( buffers[v4lBuffer.index].start, v4lBuffer.bytesused );
 
-            if( -1 == xioctl( fileDescriptor, VIDIOC_QBUF, &buf ) )
+            if( -1 == xioctl( fileDescriptor, VIDIOC_QBUF, &v4lBuffer ) )
                 errno_exit( "VIDIOC_QBUF" );
             break;
         case IO_METHOD_USERPTR:
-            CLEAR(buf);
+            CLEAR(v4lBuffer);
 
-            buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-            buf.memory = V4L2_MEMORY_USERPTR;
+            v4lBuffer.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+            v4lBuffer.memory = V4L2_MEMORY_USERPTR;
 
-            if( -1 == xioctl( fileDescriptor, VIDIOC_DQBUF, &buf ) )
+            if( -1 == xioctl( fileDescriptor, VIDIOC_DQBUF, &v4lBuffer ) )
             {
                 switch( errno )
                 {
@@ -95,8 +94,8 @@ int  capture::readFrame( void )
             }
             for( i = 0; i < numBuffers; ++i )
             {
-                if( buf.m.userptr == (unsigned long)buffers[i].start &&
-                        buf.length == buffers[i].length )
+                if( v4lBuffer.m.userptr == (unsigned long)buffers[i].start &&
+                        v4lBuffer.length == buffers[i].length )
                 break;
             }
     }
@@ -185,24 +184,23 @@ void capture::init_mmap( void )
 
     for( numBuffers = 0; numBuffers < req.count; ++numBuffers )
     {
-        struct v4l2_buffer buf;
 
-        CLEAR(buf);
+        CLEAR(v4lBuffer);
 
-        buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-        buf.memory = V4L2_MEMORY_MMAP;
-        buf.index = numBuffers;
+        v4lBuffer.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+        v4lBuffer.memory = V4L2_MEMORY_MMAP;
+        v4lBuffer.index = numBuffers;
 
-        if( -1 == xioctl( fileDescriptor, VIDIOC_QUERYBUF, &buf ) )
+        if( -1 == xioctl( fileDescriptor, VIDIOC_QUERYBUF, &v4lBuffer ) )
             errno_exit("VIDIOC_QUERYBUF");
 
-        buffers[ numBuffers ].length = buf.length;
+        buffers[ numBuffers ].length = v4lBuffer.length;
         buffers[ numBuffers ].start =
             mmap( NULL,
-                  buf.length,
+                  v4lBuffer.length,
                   PROT_READ | PROT_WRITE,
                   MAP_SHARED,
-                  fileDescriptor, buf.m.offset );
+                  fileDescriptor, v4lBuffer.m.offset );
 
         if( MAP_FAILED == buffers[ numBuffers ].start )
             errno_exit("mmap");
@@ -418,27 +416,25 @@ void capture::startCapture( void )
         case IO_METHOD_MMAP:
             for( i = 0; i < numBuffers; ++i )
             {
-                struct v4l2_buffer buf;
-                CLEAR(buf);
-                buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-                buf.memory = V4L2_MEMORY_MMAP;
-                buf.index = i;
+                CLEAR(v4lBuffer);
+                v4lBuffer.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+                v4lBuffer.memory = V4L2_MEMORY_MMAP;
+                v4lBuffer.index = i;
 
-                if( -1 == xioctl( fileDescriptor, VIDIOC_QBUF, &buf ) )
+                if( -1 == xioctl( fileDescriptor, VIDIOC_QBUF, &v4lBuffer ) )
                         errno_exit("VIDIOC_QBUF");
             }
         case IO_METHOD_USERPTR:
             for( i = 0; i < numBuffers; ++i )
             {
-                struct v4l2_buffer buf;
-                CLEAR(buf);
-                buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-                buf.memory = V4L2_MEMORY_USERPTR;
-                buf.index = i;
-                buf.m.userptr = (unsigned long)buffers[i].start;
-                buf.length = buffers[i].length;
+                CLEAR(v4lBuffer);
+                v4lBuffer.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+                v4lBuffer.memory = V4L2_MEMORY_USERPTR;
+                v4lBuffer.index = i;
+                v4lBuffer.m.userptr = (unsigned long)buffers[i].start;
+                v4lBuffer.length = buffers[i].length;
 
-                if( -1 == xioctl( fileDescriptor, VIDIOC_QBUF, &buf ) )
+                if( -1 == xioctl( fileDescriptor, VIDIOC_QBUF, &v4lBuffer ) )
                     errno_exit("VIDIOC_QBUF");
             }
             type = V4L2_BUF_TYPE_VIDEO_CAPTURE;

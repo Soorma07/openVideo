@@ -2,13 +2,12 @@
 #ifndef __V4LCAPTURE__
 #define __V4LCAPTURE__
 
+#include <string>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <cassert>
-
 #include <getopt.h>             /* getopt_long() */
-
 #include <fcntl.h>              /* low-level i/o */
 #include <unistd.h>
 #include <cerrno>
@@ -17,57 +16,54 @@
 #include <sys/time.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
-
 #include <linux/videodev2.h>
-
-/** Switching to C++ stuff **/
-#include <string>
 
 namespace v4lCapture{
 
 #define CLEAR(x) memset(&(x), 0, sizeof(x))
 
-class capture
-{
+    class capture
+    {
 
-    private:
-        struct buffer {
-            void    *start;
-            size_t  length;
-        };
+        private:
+            struct buffer {
+                void    *start;
+                size_t  length;
+            };
 
-        std::string     dev_name;
-        int             fileDescriptor;
-        buffer          *buffers;
-        unsigned int    numBuffers;
-        /** Not sure about these yet **/
-        int             outBuffer;
-        int             forceFormat;
-        int             frameCount;
+            struct v4l2_buffer v4lBuffer;
 
-        void    errno_exit( const std::string &message );
-        int     xioctl( int fileDescriptor, int request, void *arg );
-        void    processImage( const void *outStream, int size );
-        int     readFrame( void );
-        void    uninitDevice( void );
-        void    initRead( unsigned int bufferSize ); //Why wouldn't bufferSize be a data member?
-        void    init_mmap( void );
-        void    initUserPtr( unsigned int bufferSize ); //Same question.
-        void    initDevice( void );
-        void    closeDevice( void );
-        void    openDevice( void );
+            std::string     dev_name;
+            int             fileDescriptor;
+            buffer          *buffers;
+            unsigned int    numBuffers;
+            int             outBuffer;
+            int             forceFormat;
+            int             frameCount;
 
-    public:
-        capture();
-        enum io_method {
-            IO_METHOD_READ,
-            IO_METHOD_MMAP,
-            IO_METHOD_USERPTR
-        }io;
+            void    errno_exit( const std::string &message );
+            int     xioctl( int fileDescriptor, int request, void *arg );
+            void    processImage( const void *outStream, int size );
+            int     readFrame( void );
+            void    uninitDevice( void );
+            void    initRead( unsigned int bufferSize ); //Why wouldn't bufferSize be a data member?
+            void    init_mmap( void );
+            void    initUserPtr( unsigned int bufferSize ); //Same question.
+            void    initDevice( void );
+            void    closeDevice( void );
+            void    openDevice( void );
 
-        void startCapture( void );
-        void stopCapture( void );
+        public:
+            capture();
+            enum io_method {
+                IO_METHOD_READ,
+                IO_METHOD_MMAP,
+                IO_METHOD_USERPTR
+            }io;
 
-};
+            void startCapture( void );
+            void stopCapture( void );
+
+    };
 };
 #endif

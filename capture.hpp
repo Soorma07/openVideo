@@ -30,28 +30,27 @@ namespace v4lCapture{
                 void    *start;
                 size_t  length;
             };
-
-            struct v4l2_buffer v4lBuffer;
-
-            std::string     dev_name;
-            int             fileDescriptor;
             buffer          *buffers;
+            unsigned int    bufferSize;
+            std::string     dev_name;
+            int             frameCount;
+            int             fileDescriptor;
+            int             forceFormat;
             unsigned int    numBuffers;
             int             outBuffer;
-            int             forceFormat;
-            int             frameCount;
+            struct v4l2_buffer v4lBuffer;
 
+            void    closeDevice( void );
             void    errno_exit( const std::string &message );
-            int     xioctl( int fileDescriptor, int request, void *arg );
+            void    initDevice( void );
+            void    init_mmap( void );
+            void    initRead( );
+            void    initUserPtr( );
+            void    openDevice( void );
             void    processImage( const void *outStream, int size );
             int     readFrame( void );
             void    uninitDevice( void );
-            void    initRead( unsigned int bufferSize ); //Why wouldn't bufferSize be a data member?
-            void    init_mmap( void );
-            void    initUserPtr( unsigned int bufferSize ); //Same question.
-            void    initDevice( void );
-            void    closeDevice( void );
-            void    openDevice( void );
+            int     xioctl( int fileDescriptor, int request, void *arg );
 
         public:
             capture();
